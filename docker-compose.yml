@@ -8,6 +8,7 @@ services:
     privileged: true   # Потрібно для доступу до GPIO/USB на RPi
     volumes:
       - ./src:/ros2_ws/src
+      - /dev:/dev
     environment:
       - ROS_DOMAIN_ID=42 # Щоб ваші комп'ютери "чули" один одного
     stdin_open: true

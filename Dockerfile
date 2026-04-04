@@ -21,6 +21,9 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
     git \
+    gpiod \
+    libgpiod-dev \
+    python3-libgpiod \
     && rm -rf /var/lib/apt/lists/*
 
 # Ініціалізація rosdep
@@ -29,6 +32,10 @@ RUN rosdep update
 WORKDIR /ros2_ws
 ENV ROS_DISTRO=${ROS_DISTRO}
 ENV SHELL=/bin/bash
+
+# Налаштування автоматичного сорсингу для інтерактивних сесій
+RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc && \
+    echo "if [ -f /ros2_ws/install/setup.bash ]; then source /ros2_ws/install/setup.bash; fi" >> ~/.bashrc
 
 COPY ./ros_entrypoint.sh /
 RUN chmod +x /ros_entrypoint.sh
