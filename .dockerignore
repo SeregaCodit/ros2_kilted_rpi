@@ -1,0 +1,17 @@
+# Ігноруємо результати збірки ROS 2 (вони мають бути локальними для кожної машини)
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# Ігноруємо Git (в образі нам не потрібна історія коммітів)
+.git
+.gitignore
+
+# Ігноруємо Docker-файли (вони вже виконали свою роль)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Ігноруємо тимчасові файли Python
+**/__pycache__
+**/*.pyc
