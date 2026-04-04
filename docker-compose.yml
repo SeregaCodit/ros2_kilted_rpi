@@ -1,0 +1,14 @@
+services:
+  ros2_dev:
+    build: .
+    image: my_ros2_project:kilted
+    container_name: ros2_kilted_dev
+    network_mode: host # Важливо для Discovery в ROS 2
+    ipc: host          # Для швидкої передачі даних між контейнерами
+    privileged: true   # Потрібно для доступу до GPIO/USB на RPi
+    volumes:
+      - .:/ros2_ws/src/my_project
+    environment:
+      - ROS_DOMAIN_ID=42 # Щоб ваші комп'ютери "чули" один одного
+    stdin_open: true
+    tty: true
