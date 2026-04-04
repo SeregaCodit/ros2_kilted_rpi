@@ -7,7 +7,7 @@ services:
     ipc: host          # Для швидкої передачі даних між контейнерами
     privileged: true   # Потрібно для доступу до GPIO/USB на RPi
     volumes:
-      - .:/ros2_ws/src/my_project
+      - ./src:/ros2_ws/src
     environment:
       - ROS_DOMAIN_ID=42 # Щоб ваші комп'ютери "чули" один одного
     stdin_open: true
