@@ -13,9 +13,12 @@ public:
     {
         this->declare_parameter<std::string>("chip_name", "gpiochip0");
         this->declare_parameter<int>("line_offset", 17);
+        this->declare_parameter<int>("sleep_sec", 1);
 
         std::string chip_name = this->get_parameter("chip_name").as_string();
         int line_offset = this->get_parameter("line_offset").as_int();
+        auto sleep_sec = this->get_parameter("sleep_sec").as_int();
+        std::chrono::seconds sleep_val(sleep_sec);
 
         try{
             auto chip = gpiod::chip("/dev/" + chip_name);
@@ -33,7 +36,7 @@ public:
 
             RCLCPP_INFO(this->get_logger(), "Initialized %s, line %d", chip_name.c_str(), line_offset);
             offset_ = line_offset;
-            timer_ = this->create_wall_timer(1s, std::bind(&GpioNode::timer_callback, this));
+            timer_ = this->create_wall_timer(sleep_val, std::bind(&GpioNode::timer_callback, this));
 
         } catch (const std::exception &e){
             RCLCPP_ERROR(this->get_logger(), "GPIO Error: %s", e.what());

@@ -19,6 +19,7 @@ find_library(GPIOD_LIBRARIES gpiodcxx REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 add_executable(gpio_node src/gpio_node.cpp)
+
 target_include_directories(gpio_node PRIVATE ${GPIOD_INCLUDE_DIRS})
 ament_target_dependencies(gpio_node rclcpp)
 target_link_libraries(gpio_node ${GPIOD_LIBRARIES})
@@ -26,6 +27,11 @@ target_link_libraries(gpio_node ${GPIOD_LIBRARIES})
 install(TARGETS
   gpio_node
   DESTINATION lib/${PROJECT_NAME}
+)
+
+# Встановлюємо Launch-файли в share/project_name (Це просто КОПІЮВАННЯ папки)
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
