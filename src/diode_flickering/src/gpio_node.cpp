@@ -2,6 +2,7 @@
 #include <gpiod.hpp>
 #include <chrono>
 #include <memory>
+#include <unistd.h>  // for hostname check
 
 using namespace std::chrono_literals;
 
@@ -24,15 +25,15 @@ public:
             auto chip = gpiod::chip("/dev/" + chip_name);
 
             line_request_ = std::make_unique<gpiod::line_request>(
-                chip.prepare_request()                          // create request
+                chip.prepare_request()                                          // create request
                     .set_consumer(this->get_name())                             // set cunsommer
                     .add_line_settings(                                        
                         line_offset,                                             // which pin line_offset, not physical number
                         gpiod::line_settings()                                   // pin settings. if few pins - settings will be same
                             .set_direction(gpiod::line::direction::OUTPUT)       // direction
                     )
-                    .do_request()
-            );                                                // do request in a core
+                    .do_request()                                                // do request in a core
+            );                                                
 
             RCLCPP_INFO(this->get_logger(), "Initialized %s, line %d", chip_name.c_str(), line_offset);
             offset_ = line_offset;
@@ -41,6 +42,30 @@ public:
         } catch (const std::exception &e){
             RCLCPP_ERROR(this->get_logger(), "GPIO Error: %s", e.what());
             rclcpp::shutdown();
+        }
+    }
+
+    // class destructor
+    ~GpioNode()
+    {
+        if (line_request_){
+            try{
+                // set line INACTIVE
+                line_request_->set_value(offset_, gpiod::line::value::INACTIVE);
+                std::cout << "[GpioNode] Line " << offset_ << "set to INACTIVE" << std::endl;
+                // make pin INPUT back
+                auto config = gpiod::line_config();
+                config.add_line_settings(offset_,
+                    gpiod::line_settings().set_direction(gpiod::line::direction::INPUT)
+                );
+
+                // apply new config
+                line_request_->reconfigure_lines(config);
+
+                std::cout << "\n[GpioNode] Shutdown: GPIO " << offset_ <<" reseted to INPUT/OFF" << std::endl;
+            } catch (std::exception &e){
+                std::cout << "[GpioNode] Safe shutdown failed!" <<std::endl;
+            }
         }
     }
 
@@ -60,7 +85,8 @@ private:
 
 
 int main(int argc, char * argv[]){
-    #include <unistd.h>
+    rclcpp::init(argc, argv);
+    
     // save check for protect running
     char hostname[1024];
     gethostname(hostname, 1024);
@@ -69,7 +95,7 @@ int main(int argc, char * argv[]){
         return 1;
     }
 
-    rclcpp::init(argc, argv);
+    
     auto node = std::make_shared<GpioNode>();
     rclcpp::spin(node);
     rclcpp::shutdown();
