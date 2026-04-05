@@ -2,7 +2,7 @@ services:
   ros2_dev:
     build: .
     image: rpi_ros2_project:jazzy
-    container_name: ros2_jazy_rpi+dev
+    container_name: ros2_jazy_rpi_dev
     network_mode: host # Важливо для Discovery в ROS 2
     ipc: host          # Для швидкої передачі даних між контейнерами
     privileged: true   # Потрібно для доступу до GPIO/USB на RPi
