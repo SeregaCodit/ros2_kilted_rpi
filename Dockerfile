@@ -1,7 +1,7 @@
-ARG ROS_DISTRO=kilted
+ARG ROS_DISTRO=jazzy
 FROM ros:${ROS_DISTRO}-ros-base
 
-ARG ROS_DISTRO=kilted
+ARG ROS_DISTRO=jazzy
 
 # 1. Встановлюємо locales першим кроком
 RUN apt-get update && apt-get install -y \
@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
     gpiod \
     libgpiod-dev \
     python3-libgpiod \
+    python3-gpiozero \
     && rm -rf /var/lib/apt/lists/*
 
 # Ініціалізація rosdep
