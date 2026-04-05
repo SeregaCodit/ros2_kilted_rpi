@@ -60,6 +60,15 @@ private:
 
 
 int main(int argc, char * argv[]){
+    #include <unistd.h>
+    // save check for protect running
+    char hostname[1024];
+    gethostname(hostname, 1024);
+    if (std::string(hostname) != "rpi") {
+        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Safety Error: DO NOT run GPIO nodes on dev machine!");
+        return 1;
+    }
+
     rclcpp::init(argc, argv);
     auto node = std::make_shared<GpioNode>();
     rclcpp::spin(node);

@@ -12,11 +12,11 @@ def generate_launch_description():
             description="a name of gpiochip. Use: gpiodetect command"
         ),
         DeclareLaunchArgument(
-            "line_offset", default_value=17,
+            "line_offset", default_value="17",
             description="line offset valule. Use: pinout command or gpioinfo command"
         ),
         DeclareLaunchArgument(
-            "sleep_sec", default_value=1,
+            "sleep_sec", default_value="1",
             description="Blinking interval in seconds"
         ),
         Node(
