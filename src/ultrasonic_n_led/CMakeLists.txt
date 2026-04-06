@@ -16,14 +16,23 @@ find_path(GPIOD_INCLUDE_DIRS gpiod.hpp REQUIRED)
 # Шукаємо саму бібліотеку libgpiodcxx.so
 find_library(GPIOD_LIBRARIES gpiodcxx REQUIRED)
 
-add
+
+# executables
+# ultrasonic node
+add_executable(distance_publisher src/ultrasonic_node.cpp)
+target_include_directories(distance_publisher PRIVATE include ${GPIOD_INCLUDE_DIRS})
+target_link_libraries(distance_publisher ${GPIOD_LIBRARIES})
+ament_target_dependencies(distance_publisher rclcpp std_msgs)
 
 
-target_include_directories(
-  ultrasonic_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
+
+install(TARGETS
+  distance_publisher
+  DESTINATION lib/${PROJECT_NAME}
 )
+
+
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

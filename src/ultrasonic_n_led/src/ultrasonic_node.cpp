@@ -53,11 +53,19 @@ public:
                 });
                 
                 RCLCPP_INFO(this->get_logger(), "All lines reset to INACTIVE");
-            } catch(){
 
+                auto config = gpiod::line_config();
+                config.add_line_settings(trig_, gpiod::line_settings().set_direction(gpiod::line::direction::INPUT));
+                config.add_line_settings(echo_, gpiod::line_settings().set_direction(gpiod::line::direction::INPUT));
+                line_request_->reconfigure_lines(config);
+                RCLCPP_INFO(this->get_logger(), "All lines reset direction to INPUT");
+
+            } catch (std::exception &e){
+                RCLCPP_ERROR(this->get_logger(), "Safe shudown failed!\n%s", e.what());
             }
         }
     }
+
 private:
     void timer_callback(){
         // trigger pulse

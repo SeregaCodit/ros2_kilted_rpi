@@ -6,6 +6,8 @@
 
 
 namespace params {
+    using namespace std::chrono_literals;
+    
     // key constants
     inline const std::string TRIG_PIN = "trig_pin";
     inline const std::string ECHO_PIN = "echo_pin";
@@ -27,10 +29,9 @@ namespace params {
 
     // string constants
     inline const std::string GPIOCHOP = "/dev/gpiochip0";
-    inline const std::string DETECTED_DIST = "detected_distance";
     inline const std::string ULTRASONIC_NODE = "ultrasonic_node";
 
 
 }
 
-#endif;
+#endif
