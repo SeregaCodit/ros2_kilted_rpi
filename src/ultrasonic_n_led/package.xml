@@ -7,6 +7,8 @@
   <maintainer email="naumenko.s.mail@gmail.com">root</maintainer>
   <license>Apache-2.0</license>
 
+  <depend>rclcpp</depend>
+
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <test_depend>ament_lint_auto</test_depend>

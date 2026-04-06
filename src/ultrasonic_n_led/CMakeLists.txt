@@ -7,9 +7,23 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+
+#libgpiodcxx збиралась з бінарників
+# Шукаємо шлях до gpiod.hpp
+find_path(GPIOD_INCLUDE_DIRS gpiod.hpp REQUIRED)
+# Шукаємо саму бібліотеку libgpiodcxx.so
+find_library(GPIOD_LIBRARIES gpiodcxx REQUIRED)
+
+add
+
+
+target_include_directories(
+  ultrasonic_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
