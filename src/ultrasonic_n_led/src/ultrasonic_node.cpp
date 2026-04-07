@@ -35,7 +35,7 @@ public:
         );
 
         trig_ = trig; echo_ = echo;
-        publisher_ = this->create_publisher<std_msgs::msg::Float32>(params::DETECTED_DIST, params::QOS);
+        publisher_ = this->create_publisher<std_msgs::msg::Float32>(params::DETECTED_DIST_TOPIC, params::QOS);
         timer_ = this->create_wall_timer(
             params::ULTRASONIC_CALLBACK_PERIOD,
             std::bind(&UltrasonicNode::timer_callback, this)  
@@ -96,7 +96,7 @@ private:
         // calc dist
         std::chrono::duration<double> duration = echo_end - echo_start;
         float distance = (duration.count() * params::SPEED_OF_SOUND) / 2.0;
-        RCLCPP_INFO(this->get_logger(), "distance: %f", distance);
+        RCLCPP_INFO(this->get_logger(), "distance: %.2f sm", distance);
         // publish
         auto msg = std_msgs::msg::Float32();
         msg.data = distance;
@@ -120,7 +120,7 @@ int main (int argc, char * argv[]){
     char hostname[1024];
     gethostname(hostname, 1024);
     if (std::string(hostname) != params::HOSTNAME){
-        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Safety Error: DO NOT run GPIO nodes on dev host!");
+        RCLCPP_ERROR(rclcpp::get_logger(params::HOST_CHECK), "Safety Error: DO NOT run GPIO nodes on dev host!");
         return 1;
     }
 

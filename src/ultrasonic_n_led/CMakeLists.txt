@@ -24,14 +24,24 @@ target_include_directories(distance_publisher PRIVATE include ${GPIOD_INCLUDE_DI
 target_link_libraries(distance_publisher ${GPIOD_LIBRARIES})
 ament_target_dependencies(distance_publisher rclcpp std_msgs)
 
+add_executable(distance_led src/dist_led_node.cpp)
+target_include_directories(distance_led PRIVATE include ${GPIOD_INCLUDE_DIRS})
+target_link_libraries(distance_led ${GPIOD_LIBRARIES})
+ament_target_dependencies(distance_led rclcpp std_msgs)
 
 
 install(TARGETS
   distance_publisher
+  distance_led
   DESTINATION lib/${PROJECT_NAME}
 )
 
 
+install(DIRECTORY
+  launch
+  config
+  DESTINATION share/${PROJECT_NAME}
+)
 
 
 if(BUILD_TESTING)
