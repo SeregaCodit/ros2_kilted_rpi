@@ -74,7 +74,7 @@ private:
     void dist_callback(const std_msgs::msg::Float32::SharedPtr msg){
         float distance = msg->data;
 
-        if (distance > params::SAFE_DIST){
+        if (distance > safe_dist_){
             line_request_->set_values({
                 {red_line_, gpiod::line::value::INACTIVE},
                 {green_line_, gpiod::line::value::ACTIVE}
