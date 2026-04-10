@@ -11,4 +11,4 @@ distance_safety_led_node:
   ros__parameters:
     red_pin: 17
     green_pin: 27
-    distance_threshold: 20.0
+    distance_threshold: 30.0

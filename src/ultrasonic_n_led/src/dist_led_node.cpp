@@ -21,9 +21,9 @@ public:
         this->declare_parameter(params::RED_PIN, 0);
         this->declare_parameter(params::GREEN_PIN, 0);
         this->declare_parameter(params::CHIP, params::GPIOCHOP);
-        this->declare_parameter(params::TRHESHOLD, params::SAFE_DIST);
+        this->declare_parameter(params::THRESHOLD, params::SAFE_DIST);
 
-        safe_dist_ = this->get_parameter(params::TRHESHOLD).as_double();
+        safe_dist_ = this->get_parameter(params::THRESHOLD).as_double();
         auto red_line = this->get_parameter(params::RED_PIN).as_int();
         auto green_line = this->get_parameter(params::GREEN_PIN).as_int();
         auto chip = gpiod::chip(this->get_parameter(params::CHIP).as_string());
