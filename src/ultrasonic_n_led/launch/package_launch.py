@@ -20,6 +20,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             led_node_launch,
             launch_arguments={
+                
                 "distance_threshold": LaunchConfiguration("distance_threshold")
             }.items()
         )
