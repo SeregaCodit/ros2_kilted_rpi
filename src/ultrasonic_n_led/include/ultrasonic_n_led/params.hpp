@@ -14,7 +14,7 @@ namespace params {
     inline const std::string RED_PIN = "red_pin";
     inline const std::string GREEN_PIN = "green_pin";
     inline const std::string CHIP = "chip";
-    inline const std::string TRHESHOLD = "distance_threshold";
+    inline const std::string THRESHOLD = "distance_threshold";
     inline const std::string DETECTED_DIST_TOPIC = "detected_distance";
     inline const std::string HOST_CHECK = "HOST CHECK";
 
