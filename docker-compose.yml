@@ -9,7 +9,9 @@ services:
     volumes:
       - ./src:/ros2_ws/src
       - /dev:/dev
+      - /tmp/.X11-unix:/tmp/.X11-unix
     environment:
       - ROS_DOMAIN_ID=42 # Щоб ваші комп'ютери "чули" один одного
+      - DISPLAY=${DISPLAY}
     stdin_open: true
     tty: true
