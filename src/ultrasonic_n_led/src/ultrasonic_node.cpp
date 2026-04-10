@@ -47,10 +47,7 @@ public:
     {
         if (line_request_){
             try{
-                line_request_->set_values({
-                    {trig_, gpiod::line::value::INACTIVE},
-                    {echo_, gpiod::line::value::INACTIVE}
-                });
+                line_request_->set_value(trig_, gpiod::line::value::INACTIVE);
                 
                 RCLCPP_INFO(this->get_logger(), "All lines reset to INACTIVE");
 
@@ -77,7 +74,7 @@ private:
         //wait for echo start
         auto start = std::chrono::steady_clock::now();
         while (line_request_->get_value(echo_) == gpiod::line::value::INACTIVE){
-            if (std::chrono::steady_clock::now() - start < params::ECHO_TIMEOUT){
+            if (std::chrono::steady_clock::now() - start > params::ECHO_TIMEOUT){
                 break;
             }
         }
@@ -86,7 +83,7 @@ private:
 
         // wait for echo end
         while (line_request_->get_value(echo_) == gpiod::line::value::ACTIVE){
-            if (std::chrono::steady_clock::now() - echo_start < params::ECHO_TIMEOUT){
+            if (std::chrono::steady_clock::now() - echo_start > params::ECHO_TIMEOUT){
                 break;
             }
         }
