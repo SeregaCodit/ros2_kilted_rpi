@@ -39,7 +39,7 @@ public:
         red_line_ = red_line; green_line_ = green_line;
         
         
-        this->create_subscription<std_msgs::msg::Float32>(
+        subscription_ = this->create_subscription<std_msgs::msg::Float32>(
             params::DETECTED_DIST_TOPIC,
             params::QOS,
             std::bind(&DistanceSafetyLedNode::dist_callback, this, _1)
@@ -71,7 +71,7 @@ public:
         }
     }
 private:
-    void dist_callback(const std_msgs::msg::Float32::UniquePtr msg){
+    void dist_callback(const std_msgs::msg::Float32::SharedPtr msg){
         float distance = msg->data;
 
         if (distance > params::SAFE_DIST){
@@ -94,6 +94,7 @@ private:
     int red_line_, green_line_;
     float safe_dist_;
     std::unique_ptr<gpiod::line_request> line_request_;
+    rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr subscription_;
 };
 
 
