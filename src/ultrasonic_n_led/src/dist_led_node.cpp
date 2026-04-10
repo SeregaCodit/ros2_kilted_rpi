@@ -80,7 +80,7 @@ private:
                 {green_line_, gpiod::line::value::ACTIVE}
             });
 
-            RCLCPP_INFO(this->get_logger(), "distance is safe: %f sm", distance);
+            RCLCPP_INFO(this->get_logger(), "distance is safe: %2f sm", distance);
         } else {
             line_request_->set_values({
                 {red_line_, gpiod::line::value::ACTIVE},

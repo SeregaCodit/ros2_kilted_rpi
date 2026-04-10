@@ -16,6 +16,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument("distance_threshold", default_value="20.0",
                               description="Safe distance to ultrasonic sensor"),
+
         IncludeLaunchDescription(
             led_node_launch,
             launch_arguments={
