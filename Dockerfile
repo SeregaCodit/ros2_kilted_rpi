@@ -16,24 +16,20 @@ ENV LC_ALL=en_US.UTF-8
 # 2. Інструменти розробки, GUI та залежності
 # Об'єднуємо все в один RUN, щоб не плодити проміжні шари
 RUN apt-get update && apt-get install -y \
-    # GUI інструменти (для PC)
-    ros-${ROS_DISTRO}-rqt \
-    ros-${ROS_DISTRO}-rqt-common-plugins \
-    ros-${ROS_DISTRO}-rqt-graph \
-    ros-${ROS_DISTRO}-rqt-reconfigure \
-    # СУЧАСНІ бібліотеки графіки для Ubuntu 24.04
-    libgl1 \
-    libglx-mesa0 \
-    libxext6 \
-    libxrender1 \
-    # Інструменти збірки ROS
+    # Інструменти збірки (Аналог build-essential для C++)
     python3-colcon-common-extensions \
     python3-rosdep \
     python3-argcomplete \
-    # Системні інструменти
     build-essential \
     cmake \
     git \
+    # Інструменти для I2C та GPIO (Залізо)
+    i2c-tools \
+    libi2c-dev \
+    python3-gpiozero \
+    # Foxglove Bridge (Заміна RQt)
+    ros-${ROS_DISTRO}-foxglove-bridge \
+    # Системні утиліти для збірки libgpiod з сирців
     autoconf \
     autoconf-archive \
     libtool \
@@ -41,7 +37,6 @@ RUN apt-get update && apt-get install -y \
     m4 \
     python3-dev \
     python3-setuptools \
-    python3-gpiozero \
     && rm -rf /var/lib/apt/lists/*
 
 # 3. Збірка libgpiod v2.1 з сирців
