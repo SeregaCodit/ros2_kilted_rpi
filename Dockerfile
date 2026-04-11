@@ -3,7 +3,7 @@ FROM ros:${ROS_DISTRO}-ros-base
 
 ARG ROS_DISTRO=jazzy
 
-# 1. Локалі
+# 1. Налаштування локалі (UTF-8 критично для ROS 2)
 RUN apt-get update && apt-get install -y \
     locales \
     && locale-gen en_US en_US.UTF-8 \
@@ -13,14 +13,23 @@ RUN apt-get update && apt-get install -y \
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 
-# 2. Встановлюємо інструменти збірки та залежності ROS
+# 2. Інструменти розробки, GUI та залежності
+# Об'єднуємо все в один RUN, щоб не плодити проміжні шари
 RUN apt-get update && apt-get install -y \
+    # Інструменти збірки (Аналог build-essential для C++)
     python3-colcon-common-extensions \
     python3-rosdep \
     python3-argcomplete \
     build-essential \
     cmake \
     git \
+    # Інструменти для I2C та GPIO (Залізо)
+    i2c-tools \
+    libi2c-dev \
+    python3-gpiozero \
+    # Foxglove Bridge (Заміна RQt)
+    ros-${ROS_DISTRO}-foxglove-bridge \
+    # Системні утиліти для збірки libgpiod з сирців
     autoconf \
     autoconf-archive \
     libtool \
@@ -28,26 +37,26 @@ RUN apt-get update && apt-get install -y \
     m4 \
     python3-dev \
     python3-setuptools \
-    python3-gpiozero \
     && rm -rf /var/lib/apt/lists/*
 
-# Збірка libgpiod v2.1 з сирців
+# 3. Збірка libgpiod v2.1 з сирців
 WORKDIR /tmp
 RUN git clone --depth 1 --branch v2.1 https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/ && \
     cd libgpiod && \
     ./autogen.sh --enable-bindings-cxx --enable-bindings-python --enable-tools --prefix=/usr/local && \
     make -j$(nproc) && \
     make install && \
-    ldconfig
+    ldconfig && \
+    cd .. && rm -rf libgpiod # Очищення після збірки
 
-# Ініціалізація rosdep
+# Оновлення бази rosdep
 RUN rosdep update
 
 WORKDIR /ros2_ws
 ENV ROS_DISTRO=${ROS_DISTRO}
 ENV SHELL=/bin/bash
 
-# Налаштування bashrc
+# Налаштування автоматичного сорсингу
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc && \
     echo "if [ -f /ros2_ws/install/setup.bash ]; then source /ros2_ws/install/setup.bash; fi" >> ~/.bashrc
 

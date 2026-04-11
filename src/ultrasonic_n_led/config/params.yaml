@@ -1,0 +1,13 @@
+/**:
+  ros__parameters:
+    chip: "/dev/gpiochip0"
+
+ultrasonic_node:
+  ros__parameters:
+    trig_pin: 23
+    echo_pin: 24
+
+distance_safety_led_node:
+  ros__parameters:
+    red_pin: 17
+    green_pin: 27
