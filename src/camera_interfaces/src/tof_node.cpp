@@ -18,7 +18,7 @@ public:
             RCLCPP_INFO(this->get_logger(), "Hardware VL53L0X is ONLINE!");
         }
 
-        publisher_ = this->create_publisher<sensor_msgs::msg::Range>(params::RAW_DISTANCE, 10);
+        publisher_ = this->create_publisher<sensor_msgs::msg::Range>(params::TOF_DISTANCE, 10);
         timer_ = this->create_wall_timer(50ms, std::bind(&TofNode::dist_callback, this));
 
         
@@ -31,12 +31,12 @@ private:
         auto msg = sensor_msgs::msg::Range();
         
         auto timestamp = this->get_clock()->now();
-        msg.header.stamp = timestamp;
+        
        // msg.range = static_cast<float>(raw_dist_mm) / 1000.0f; // ROS standart in meters
 
         
 
-        if (raw_dist_mm > 2.0f || raw_dist_mm < 0.01f) return;
+        if (raw_dist_mm > 2000 || raw_dist_mm < 20) return;
 
         window_.push_back(raw_dist_mm);
 
@@ -46,7 +46,13 @@ private:
 
         float average_dist = std::accumulate(window_.begin(), window_.end(), 0.0f) / window_.size();
         
-        msg.range = static_cast<float>(average_dist) / 100.0f;
+        msg.header.stamp = timestamp;
+        msg.header.frame_id = "tof_link";
+        msg.max_range = 2.0f;
+        msg.min_range = 0.03f;
+        msg.radiation_type = sensor_msgs::msg::Range::INFRARED;
+        msg.field_of_view = 0.436f; // 25 градусів
+        msg.range = static_cast<float>(average_dist) / 1000.0f;
         publisher_->publish(msg);
  
 
