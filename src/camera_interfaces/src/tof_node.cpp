@@ -18,8 +18,7 @@ public:
             RCLCPP_INFO(this->get_logger(), "Hardware VL53L0X is ONLINE!");
         }
 
-        raw_dist_publisher_ = this->create_publisher<sensor_msgs::msg::Range>(params::RAW_DISTANCE, 10);
-        avg_dist_publisher_ = this->create_publisher<sensor_msgs::msg::Range>(params::WEIGHTED_DISTANCE, 10);
+        publisher_ = this->create_publisher<sensor_msgs::msg::Range>(params::RAW_DISTANCE, 10);
         timer_ = this->create_wall_timer(50ms, std::bind(&TofNode::dist_callback, this));
 
         
@@ -33,9 +32,9 @@ private:
         
         auto timestamp = this->get_clock()->now();
         msg.header.stamp = timestamp;
-        msg.range = static_cast<float>(raw_dist_mm) / 1000.0f; // ROS standart in meters
+       // msg.range = static_cast<float>(raw_dist_mm) / 1000.0f; // ROS standart in meters
 
-        raw_dist_publisher_->publish(msg);
+        
 
         if (raw_dist_mm > 2.0f || raw_dist_mm < 0.01f) return;
 
@@ -46,17 +45,15 @@ private:
         }
 
         float average_dist = std::accumulate(window_.begin(), window_.end(), 0.0f) / window_.size();
-        auto avg_msg = sensor_msgs::msg::Range();
-
-        avg_msg.header.stamp = timestamp;
-        avg_msg.range = average_dist;
-        avg_dist_publisher_->publish(avg_msg);
+        
+        msg.range = static_cast<float>(average_dist) / 100.0f;
+        publisher_->publish(msg);
+ 
 
     }
 
 std::unique_ptr<simple_drivers::VL53L0X> sensor_;
-rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr raw_dist_publisher_;
-rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr avg_dist_publisher_;
+rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr publisher_;
 rclcpp::TimerBase::SharedPtr timer_;
 const size_t window_size_ = 5;
 std::vector<float> window_;
