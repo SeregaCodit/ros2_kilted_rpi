@@ -12,6 +12,7 @@ namespace params {
 
     // str constants
     inline const std::string I2C_DEVICE = "/dev/i2c-1";
+    inline const std::string VL5310x_ADDRESS = "0x29";
 }
 
 
