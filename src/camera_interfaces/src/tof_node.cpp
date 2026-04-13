@@ -18,28 +18,49 @@ public:
             RCLCPP_INFO(this->get_logger(), "Hardware VL53L0X is ONLINE!");
         }
 
-        publisher_ = this->create_publisher<sensor_msgs::msg::Range>(params::TOF_TOPIC, 10);
-
+        raw_dist_publisher_ = this->create_publisher<sensor_msgs::msg::Range>(params::RAW_DISTANCE, 10);
+        avg_dist_publisher_ = this->create_publisher<sensor_msgs::msg::Range>(params::WEIGHTED_DISTANCE, 10);
         timer_ = this->create_wall_timer(50ms, std::bind(&TofNode::dist_callback, this));
 
+        
     }
 
 private:
     void dist_callback(){
-        uint16_t dist_mm = sensor_->read_mm();
-        RCLCPP_DEBUG(this->get_logger(), "Distanse: %d", dist_mm);
+        uint16_t raw_dist_mm = sensor_->read_mm();
+        RCLCPP_DEBUG(this->get_logger(), "Distanse: %d", raw_dist_mm);
         auto msg = sensor_msgs::msg::Range();
         
-        msg.header.stamp = this->get_clock()->now();
-        msg.range = static_cast<float>(dist_mm) / 1000.0f; // ROS standart in meters
+        auto timestamp = this->get_clock()->now();
+        msg.header.stamp = timestamp;
+        msg.range = static_cast<float>(raw_dist_mm) / 1000.0f; // ROS standart in meters
 
-        publisher_->publish(msg);
+        raw_dist_publisher_->publish(msg);
+
+        if (raw_dist_mm > 2.0f || raw_dist_mm < 0.01f) return;
+
+        window_.push_back(raw_dist_mm);
+
+        if (window_.size() > window_size_){
+            window_.erase(window_.begin());
+        }
+
+        float average_dist = std::accumulate(window_.begin(), window_.end(), 0.0f) / window_.size();
+        auto avg_msg = sensor_msgs::msg::Range();
+
+        avg_msg.header.stamp = timestamp;
+        avg_msg.range = average_dist;
+        avg_dist_publisher_->publish(avg_msg);
 
     }
 
 std::unique_ptr<simple_drivers::VL53L0X> sensor_;
-rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr publisher_;
+rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr raw_dist_publisher_;
+rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr avg_dist_publisher_;
 rclcpp::TimerBase::SharedPtr timer_;
+const size_t window_size_ = 5;
+std::vector<float> window_;
+
 };
 
 

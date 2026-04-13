@@ -7,7 +7,8 @@
 namespace params {
     // keys
     inline const std::string TOF_NODE_NAME = "tof_node";
-    inline const std::string TOF_TOPIC = "tof_distance";
+    inline const std::string RAW_DISTANCE = "raw_distance";
+    inline const std::string WEIGHTED_DISTANCE = "weighted_distance";
     inline const std::string ALLOWED_HOST = "rpi";
 
 
