@@ -8,11 +8,13 @@ namespace params {
     // keys
     inline const std::string TOF_NODE_NAME = "tof_node";
     inline const std::string TOF_TOPIC = "tof_distance";
+    inline const std::string ALLOWED_HOST = "rpi";
 
 
     // str constants
     inline const std::string I2C_DEVICE = "/dev/i2c-1";
-    inline const std::string VL5310x_ADDRESS = "0x29";
+    
+    inline constexpr std::int8_t VL5310x_ADDRESS = 0x29;
 }
 
 

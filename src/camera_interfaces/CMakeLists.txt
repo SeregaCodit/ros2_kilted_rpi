@@ -7,9 +7,21 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+
+add_executable(tof_distance_publisher
+  src/tof_node.cpp
+  src/vl53l0x_driver.cpp
+  )
+ament_target_dependencies(tof_distance_publisher rclcpp sensor_msgs)
+target_include_directories(tof_distance_publisher PRIVATE include)
+
+
+install(TARGETS
+  tof_distance_publisher
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
