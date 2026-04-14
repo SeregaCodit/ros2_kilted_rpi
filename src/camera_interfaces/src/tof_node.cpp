@@ -38,13 +38,18 @@ private:
 
         if (raw_dist_mm > 2000 || raw_dist_mm < 20) return;
 
+        if (window_.size() > 0 
+            and std::abs(window_.back() - raw_dist_mm) > window_.back() * 0.1f) return;
+
         window_.push_back(raw_dist_mm);
 
         if (window_.size() > window_size_){
             window_.erase(window_.begin());
         }
 
+        
         float average_dist = std::accumulate(window_.begin(), window_.end(), 0.0f) / window_.size();
+        
         
         msg.header.stamp = timestamp;
         msg.header.frame_id = "tof_link";
@@ -61,7 +66,7 @@ private:
 std::unique_ptr<simple_drivers::VL53L0X> sensor_;
 rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr publisher_;
 rclcpp::TimerBase::SharedPtr timer_;
-const size_t window_size_ = 10;
+const size_t window_size_ = 5;
 std::vector<float> window_;
 
 };
