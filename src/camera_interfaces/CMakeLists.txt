@@ -19,6 +19,12 @@ ament_target_dependencies(tof_distance_publisher rclcpp sensor_msgs)
 target_include_directories(tof_distance_publisher PRIVATE include)
 
 
+add_executable(distance_decision_processor
+  src/distance_decision_processor.cpp
+)
+ament_target_dependencies(distance_decision_processor rclcpp sensor_msgs)
+target_include_directories(distance_decision_processor PRIVATE include)
+
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/TakeSnapshot.srv"
