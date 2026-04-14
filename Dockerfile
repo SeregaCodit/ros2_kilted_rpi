@@ -27,6 +27,11 @@ RUN apt-get update && apt-get install -y \
     i2c-tools \
     libi2c-dev \
     python3-gpiozero \
+    v4l-utils \
+    libv4l-dev \
+    libcamera-dev \
+    libopencv-dev \
+    python3-opencv \
     # Foxglove Bridge (Заміна RQt)
     ros-${ROS_DISTRO}-foxglove-bridge \
     # Системні утиліти для збірки libgpiod з сирців

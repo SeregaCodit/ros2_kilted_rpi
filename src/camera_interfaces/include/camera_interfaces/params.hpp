@@ -12,7 +12,8 @@ namespace params {
     inline const std::string DDP_NODE = "distance_decision_processor_node";
     inline const std::string SNAPSHOT_SERVICE = "snaphot_service";
     inline const std::string SAFE_DIST_PARAM = "safe_distance";
-
+    inline const std::string CAMERA_SRV = "camera_service";
+    inline const std::string SNAPSHOT_SRV = "camera_snapshot_service";
 
     // str constants
     inline const std::string I2C_DEVICE = "/dev/i2c-1";
