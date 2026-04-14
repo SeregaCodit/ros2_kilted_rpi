@@ -52,7 +52,7 @@ private:
         msg.min_range = 0.03f;
         msg.radiation_type = sensor_msgs::msg::Range::INFRARED;
         msg.field_of_view = 0.436f; // 25 градусів
-        msg.range = static_cast<float>(average_dist) / 1000.0f;
+        msg.range = static_cast<float>(raw_dist_mm) / 1000.0f;
         publisher_->publish(msg);
  
 
