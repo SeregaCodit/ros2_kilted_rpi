@@ -52,7 +52,7 @@ private:
         msg.min_range = 0.03f;
         msg.radiation_type = sensor_msgs::msg::Range::INFRARED;
         msg.field_of_view = 0.436f; // 25 градусів
-        msg.range = static_cast<float>(raw_dist_mm) / 1000.0f;
+        msg.range = static_cast<float>(average_dist) / 1000.0f;
         publisher_->publish(msg);
  
 
@@ -61,7 +61,7 @@ private:
 std::unique_ptr<simple_drivers::VL53L0X> sensor_;
 rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr publisher_;
 rclcpp::TimerBase::SharedPtr timer_;
-const size_t window_size_ = 5;
+const size_t window_size_ = 10;
 std::vector<float> window_;
 
 };
