@@ -11,6 +11,12 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/TakeSnapshot.srv"
+  "srv/SaveImage.srv"
+)
+
+
 add_executable(tof_distance_publisher
   src/tof_node.cpp
   src/vl53l0x_driver.cpp
@@ -26,13 +32,11 @@ ament_target_dependencies(distance_decision_processor rclcpp sensor_msgs)
 target_include_directories(distance_decision_processor PRIVATE include)
 
 
-rosidl_generate_interfaces(${PROJECT_NAME}
-  "srv/TakeSnapshot.srv"
-  "srv/SaveImage.srv"
-)
+
 
 install(TARGETS
   tof_distance_publisher
+  distance_decision_processor
   DESTINATION lib/${PROJECT_NAME}
 )
 
