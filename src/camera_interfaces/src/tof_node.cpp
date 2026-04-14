@@ -38,9 +38,6 @@ private:
 
         if (raw_dist_mm > 2000 || raw_dist_mm < 20) return;
 
-        if (window_.size() > 0 
-            and std::abs(window_.back() - raw_dist_mm) > window_.back() * 0.1f) return;
-
         window_.push_back(raw_dist_mm);
 
         if (window_.size() > window_size_){
@@ -50,6 +47,9 @@ private:
         
         float average_dist = std::accumulate(window_.begin(), window_.end(), 0.0f) / window_.size();
         
+        if (window_.size() > 1 and std::abs(raw_dist_mm - average_dist) > average_dist * 0.1f){
+            window_.back() = average_dist + (raw_dist_mm - average_dist) * 0.1f;
+        }
         
         msg.header.stamp = timestamp;
         msg.header.frame_id = "tof_link";
