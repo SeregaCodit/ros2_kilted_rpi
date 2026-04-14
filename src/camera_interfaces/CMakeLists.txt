@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
 add_executable(tof_distance_publisher
   src/tof_node.cpp
@@ -17,6 +18,12 @@ add_executable(tof_distance_publisher
 ament_target_dependencies(tof_distance_publisher rclcpp sensor_msgs)
 target_include_directories(tof_distance_publisher PRIVATE include)
 
+
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/TakeSnapshot.srv"
+  "srv/SaveImage.srv"
+)
 
 install(TARGETS
   tof_distance_publisher
