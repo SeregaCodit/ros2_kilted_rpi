@@ -36,7 +36,7 @@ private:
 
         
 
-        if (raw_dist_mm > 2000 || raw_dist_mm < 20) return;
+        if (raw_dist_mm > 2000 || raw_dist_mm < 30) return;
 
         window_.push_back(raw_dist_mm);
 

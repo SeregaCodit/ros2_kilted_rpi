@@ -18,7 +18,7 @@ namespace params {
     inline const std::string I2C_DEVICE = "/dev/i2c-1";
     
     inline constexpr std::int8_t VL5310x_ADDRESS = 0x29;
-    inline constexpr float SAFE_DIST_DEFOULT = 0.50;
+    inline constexpr float SAFE_DIST_DEFOULT = 0.20f;
 
 }
 
