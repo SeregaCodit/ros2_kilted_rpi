@@ -9,6 +9,7 @@
 
 
   <depend>rclcpp</depend>
+  <depend>libopencv-dev</depend>
   <depend>sensor_msgs</depend>
   
   <buildtool_depend>rosidl_default_generators</buildtool_depend>

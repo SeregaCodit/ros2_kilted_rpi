@@ -14,9 +14,11 @@ namespace params {
     inline const std::string SAFE_DIST_PARAM = "safe_distance";
     inline const std::string CAMERA_SRV = "camera_service";
     inline const std::string SNAPSHOT_SRV = "camera_snapshot_service";
+    inline const std::string SAVE_PATH_KEY = "save_path"; 
 
     // str constants
     inline const std::string I2C_DEVICE = "/dev/i2c-1";
+    inline const std::string SAVE_PATH_VAL = "/ros2_ws/snapshots/";
     
     inline constexpr std::int8_t VL5310x_ADDRESS = 0x29;
     inline constexpr float SAFE_DIST_DEFOULT = 0.20f;
