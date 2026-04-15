@@ -34,10 +34,18 @@ class DistanceDecisionProcessor : public rclcpp::Node{
         
         
         void distance_callback(const sensor_msgs::msg::Range::SharedPtr msg){
+            
 
-            if (msg->range < safe_dist_ and !await_response_){
+            if (msg->range < safe_dist_ && !await_response_){
                 RCLCPP_WARN(this->get_logger(), "Detection at distance %.2f m!", msg->range);
                 
+                if (!camera_client_->wait_for_service(0s)) {
+                    RCLCPP_ERROR(this->get_logger(), "Camera service is NOT available!");
+                    return;
+                }
+
+                await_response_ = true;
+
                 auto request = std::make_shared<camera_interfaces::srv::TakeSnapshot::Request>();
                 auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
@@ -45,6 +53,18 @@ class DistanceDecisionProcessor : public rclcpp::Node{
                 ss << std::put_time(std::localtime(&now), "%Y-%m-%d_%H-%M-%S");
                 std::string filename = ss.str();
                 request->filename = filename;
+
+                camera_client_->async_send_request(request,
+                [this](rclcpp::Client<camera_interfaces::srv::TakeSnapshot>::SharedFuture future){
+                    auto response = future.get();
+                    if (response->success) {
+                        RCLCPP_INFO(this->get_logger(), "Service Success: %s", response->message.c_str());
+                    } else {
+                        RCLCPP_ERROR(this->get_logger(), "Service Failed: %s", response->message.c_str());
+                    }
+  
+                    this->await_response_ = false;
+                });
             }
         }
 

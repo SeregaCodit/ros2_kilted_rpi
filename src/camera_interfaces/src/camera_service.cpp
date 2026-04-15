@@ -21,7 +21,7 @@ public:
         save_path_ = this->get_parameter(params::SAVE_PATH_KEY).as_string();
 
         srv_ = this->create_service<camera_interfaces::srv::TakeSnapshot>(
-            params::SNAPSHOT_SRV,
+            params::SNAPSHOT_SERVICE,
             std::bind(&CameraService::on_snaphot, this, _1, _2)
             
         );
